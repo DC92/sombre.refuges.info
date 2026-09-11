@@ -13,12 +13,16 @@ const map = initLeafletMap(
   <?=json_encode($config_wri['mapKeys'])?>
 );
 
+
+// Ajoute de controle pre-load OpenHikingMap
 controlPreload.addTo(map);
+
 
 // Externalise le sélecteur de points pour les grandes largeurs de fenêtre
 const conteneurSelecteurExterneEl = document.getElementById('conteneur-selecteur-points'),
   conteneurDeuxièmeSelecteurEl = document.querySelector(':has(>.leaflet-control-layers)').lastChild.lastChild,
   selecteursPointsEl = document.querySelector('.leaflet-control-layers-overlays:has(img)'),
+  // Lien d'export de la carte
   exportCarteEl = document.getElementById('export-carte');
 
 ['load', 'resize'].forEach(evtName =>
@@ -29,14 +33,27 @@ const conteneurSelecteurExterneEl = document.getElementById('conteneur-selecteur
       conteneurSelecteurExterneEl.insertBefore(selecteursPointsEl, conteneurSelecteurExterneEl.firstElementChild);
   }));
 
-function makeExportLink() {
-  const bne = map.getBounds()._northEast;
-  bsw = map.getBounds()._southWest;
 
-  exportCarteEl.firstElementChild.href = '/api/bbox' +
-    '?type_points=' + localStorage.checkedLayers +
+// Calcul du lien d'export
+function setExportLink() {
+  const bne = map.getBounds()._northEast,
+    bsw = map.getBounds()._southWest,
+    fc = (coord) => Math.floor(coord * 10000) / 10000,
+    cc = (coord) => Math.ceil(coord * 10000) / 10000;
+
+  exportCarteEl.lastElementChild.href = '/api/bbox' +
+    '?type_points=' + localStorage.checkedLayers
+    .split(',') // Sépare les noms de couches
+    .map((layerName) => // Exécute pour chaque couche mémorisée
+      (clusteredVectorlayers[layerName] ?? [])[0] // Retourne le n° de type de chaque couche
+    )
+    .filter(Boolean) // Filtre les couches n'ayant pas de n° de type
+    .join(',') + // Reconstitue la chaine argument de type_points=
     '&nb_points=all' +
-    '&bbox=' + bsw.lng + ',' + bsw.lat + ',' + bne.lng + ',' + bne.lat +
-    '&format=' + exportCarteEl.lastElementChild.value;
+    '&bbox=' + fc(bsw.lng) + ',' + fc(bsw.lat) + ',' + cc(bne.lng) + ',' + cc(bne.lat) +
+    '&format=' + exportCarteEl.firstElementChild.value;
 }
-makeExportLink(); // Do it once at init
+
+map.on('overlayadd', () => setExportLink()); // Also for init
+map.on('overlayremove', () => setExportLink());
+map.on('moveend', () => setExportLink()); // For zoom & shifts

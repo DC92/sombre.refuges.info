@@ -8,9 +8,12 @@
 
   <div class="tablo">
     <h4><?=$vue->stat->nbpoints?> points, <?=$vue->stat->nbmassifs?> massifs</h4>
+
+    <div id="carte-accueil" class="carte"></div>
+
     <p id="export-carte">
-      <a href="aaa">Export des points refuges.info</a> sélectionnés sur la carte
-      <select name="format" onchange="makeExportLink()">
+      Export des points refuges.info sélectionnés sur la carte
+      <select name="format" onchange="setExportLink()">
         <option value="gpx">gpx (Complet, pour logiciel type osmand, marble, ...)</option>
         <option value="gpx_garmin">gpx (compatible basecamp/mapsource/viking/...)</option>
         <option value="gpx_simple">gpx simplifié (sans remarques et accès)</option>
@@ -21,9 +24,9 @@
         <option value="json">JSON</option>
         <option value="geojson">GeoJSON</option>
       </select>
+      <a>Télécharger</a>
     </p>
     <div id="conteneur-selecteur-points"></div>
-    <div id="carte-accueil" class="carte"></div>
 
     <h5>Autres zones :</h5>
     <ul class="liste-massifs">

@@ -1,5 +1,25 @@
 /* global L, MarkerCompass, tileLayerIGN, wriPOILayer, wriPolygonLayer */
 
+// Couches refuges.info
+const clusteredVectorlayers = {
+    'Cabane non gardée': [7, 'cabane'],
+    'Refuge gardé': [10, 'cabane_red'],
+    'Gîte d\'étape': [9, 'cabane_green'],
+    'Grotte': [29, 'grotte'],
+    'Point d\'eau': [23, 'pointdeau'],
+    'Passage délicat': [3, 'triangle_a33.10'],
+    'Bâtiment en montagne': [28, 'cabane_white_black_a63'],
+  },
+  // Couches OSM overpass
+  OverpassVectorlayers = {
+    'hôtel': '["tourism"~"hotel|guest_house|chalet|hostel|apartment"]',
+    'camping': '["tourism"="camp_site"]',
+    'point d\'eau': '["natural"="spring"]({{bbox}});nwr["amenity"="drinking_water"]',
+    'ravitaillement': '["shop"~"supermarket|convenience"]',
+    'parking': '["amenity"="parking"]["access"!="private"]',
+    'bus': '["highway"="bus_stop"]',
+  };
+
 /***************************
  * Déclaration de la carte *
  ***************************/
@@ -113,30 +133,10 @@ function initLeafletMap(mapId, serveurAPI, versionFeatures, layerKeys) {
   /************************
    * Couches vectorielles *
    ************************/
-  // Couches refuges.info
-  const clusteredVectorlayers = {
-      'Cabane non gardée': [7, 'cabane'],
-      'Refuge gardé': [10, 'cabane_red'],
-      'Gîte d\'étape': [9, 'cabane_green'],
-      'Grotte': [29, 'grotte'],
-      'Point d\'eau': [23, 'pointdeau'],
-      'Passage délicat': [3, 'triangle_a33.10'],
-      'Bâtiment en montagne': [28, 'cabane_white_black_a63'],
-    },
-    // Couches OSM overpass
-    OverpassVectorlayers = {
-      'hôtel': '["tourism"~"hotel|guest_house|chalet|hostel|apartment"]',
-      'camping': '["tourism"="camp_site"]',
-      'point d\'eau': '["natural"="spring"]({{bbox}});nwr["amenity"="drinking_water"]',
-      'ravitaillement': '["shop"~"supermarket|convenience"]',
-      'parking': '["amenity"="parking"]["access"!="private"]',
-      'bus': '["highway"="bus_stop"]',
-    },
-    // Toutes les couches overlay
-    overlayLayers = {},
+  // Toutes les couches vectorielles overlays
+  const overlayLayers = {},
     memCheckedLayers = typeof localStorage.checkedLayers === 'string' ?
     localStorage.checkedLayers.split(',') : ['Cabane non gardée', 'Refuge gardé', 'Gîte d\'étape'], // Par défaut
-
     // Groupement des couches qui doivent être clustérisées ensembles
     vectorCluster = L.markerClusterGroup({
       spiderfyOnMaxZoom: true, // Overlapping markers will spiderfy when clicked
