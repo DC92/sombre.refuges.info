@@ -57,7 +57,7 @@ function initLeafletMap(mapId, serveurAPI, versionFeatures, layerKeys) {
       OpenHikingMap: L.tileLayer(
         'https://tile.openmaps.fr/openhikingmap/{z}/{x}/{y}.png', {
           maxZoom: 18,
-          //DCMM edgeBufferTiles: 3,
+          //DCMM FUTUR HORS RESEAU edgeBufferTiles: 3,
           attribution: '<a href="https://wiki.openstreetmap.org/wiki/OpenHikingMap"> OpenHikingMap</a> | ' +
             '<a href="https://openmaps.fr/map-legend/openhikingmap-legend.html">Légende</a>',
         }),
@@ -134,9 +134,10 @@ function initLeafletMap(mapId, serveurAPI, versionFeatures, layerKeys) {
    * Couches vectorielles *
    ************************/
   // Toutes les couches vectorielles overlays
-  const overlayLayers = {},
+  const defaultWriLalers = ['Cabane non gardée', 'Refuge gardé', 'Gîte d\'étape'],
+    overlayLayers = {},
     memCheckedLayers = typeof localStorage.checkedLayers === 'string' ?
-    localStorage.checkedLayers.split(',') : ['Cabane non gardée', 'Refuge gardé', 'Gîte d\'étape'], // Par défaut
+    localStorage.checkedLayers.split(',') : defaultWriLalers,
     // Groupement des couches qui doivent être clustérisées ensembles
     vectorCluster = L.markerClusterGroup({
       spiderfyOnMaxZoom: true, // Overlapping markers will spiderfy when clicked
@@ -190,7 +191,8 @@ function initLeafletMap(mapId, serveurAPI, versionFeatures, layerKeys) {
   ['load', 'overlayadd', 'overlayremove'].forEach((type) => {
     map.on(type, (evt) => {
       const overlaySelectors = document.querySelectorAll('.leaflet-control-layers-overlays input'),
-        checkedLayers = [];
+        checkedLayersnames = [],
+        checkedLayersTypes = [];
 
       for (const lsInputEl of overlaySelectors) {
         const nom = lsInputEl.parentElement.lastChild.innerText.trim();
@@ -204,12 +206,17 @@ function initLeafletMap(mapId, serveurAPI, versionFeatures, layerKeys) {
         }
 
         // Mémorise les couches actuelles
-        if (lsInputEl.checked)
-          checkedLayers.push(nom);
+        if (lsInputEl.checked) {
+          checkedLayersnames.push(nom);
+
+          if (typeof clusteredVectorlayers[nom] === 'object')
+            checkedLayersTypes.push(clusteredVectorlayers[nom][0]);
+        }
       }
 
       // Mémorisé dans la mémoire permanente de l'explorateur localStorage
-      localStorage.checkedLayers = checkedLayers.join(',');
+      localStorage.checkedLayers = checkedLayersnames.join(',');
+      localStorage.checkedLayersTypes = checkedLayersTypes.join(',');
 
       // Cache les étiquettes pour les grandes échèles
       map.getContainer().classList[map.getZoom() < 8 ? 'add' : 'remove']('hide-tooltips');

@@ -315,15 +315,20 @@ a:hover {
 }
 
 /*==================================================================*/
-/* La pages des massifs (accueil)                                   */
+/* La pages d'accueil                                               */
 /*==================================================================*/
 .tablo h4 {
   margin-top: 10px;
 }
 
+#export-carte {
+  display: none; /* Par défaut */
+}
+
 #export-carte a {
   border: solid var(--couleur_lien);
   padding: 0 2px;
+  cursor: pointer;
 }
 
 @media screen and (min-width: 1200px) {

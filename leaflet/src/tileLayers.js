@@ -27,6 +27,7 @@ function tileLayerIGN(url, paramsIGN, paramsLayer) {
     });
 }
 
+//DCMM FUTUR HORS RESEAU
 // Bouton de préchargement des tuiles OpenHickingMap
 const controlPreload = L.control({
   position: 'topleft',
