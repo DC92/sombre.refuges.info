@@ -13,10 +13,9 @@ const map = initLeafletMap(
   <?=json_encode($config_wri['mapKeys'])?>
 );
 
-
+//DCMM FUTUR
 // Ajoute de controle pre-load OpenHikingMap
 controlPreload.addTo(map);
-
 
 // Externalise le sélecteur de points pour les grandes largeurs de fenêtre
 const conteneurSelecteurExterneEl = document.getElementById('conteneur-selecteur-points'),
@@ -32,7 +31,6 @@ const conteneurSelecteurExterneEl = document.getElementById('conteneur-selecteur
     else
       conteneurSelecteurExterneEl.insertBefore(selecteursPointsEl, conteneurSelecteurExterneEl.firstElementChild);
   }));
-
 
 // Calcul du lien d'export
 function setExportLink() {

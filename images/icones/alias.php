@@ -1,4 +1,7 @@
 <?php
+
+// A noter, le système d'icône de refuges.info n'utilise pas ce fichier, il n'est utilisé que pour les icônes de site tiers
+
 $colors = ['black','green','lightgreen','blue','red','grey','yellow','white',
 	'maroon','orange','blanchedalmond','lightgrey','violet','purple','turquoise'];
 
@@ -54,11 +57,6 @@ $alias = [
 	'village' => 'cabane_grey_black_a118',
 	'ville' => 'cabane_white_black_a86',
 
-	// WRI
-	//'gite-d-etape' => 'blue',
-	//'passage-delicat' => 'triangle_a33',
-	// Favicon
-	'favicon' => 'feu_cabane_porte_oeuil_t384',
 	// PRC
 	'cabane_fermee' => 'cabane_white_black_x',
 	'cabane_mais' => 'cabane_white_black_x',
